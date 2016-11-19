@@ -4,12 +4,12 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+
+import io.elromantico.reader.feed.Feed;
+import io.elromantico.reader.feed.FeedItem;
 
 public class RSSFeedParser {
     private static final String TITLE = "title";
@@ -68,11 +68,11 @@ public class RSSFeedParser {
                     case XmlPullParser.END_TAG:
                         switch (name) {
                             case ITEM:
-                                FeedMessage message = new FeedMessage();
+                                FeedItem message = new FeedItem();
                                 message.setAuthor(author);
                                 message.setDescription(description);
                                 message.setTitle(title);
-                                feed.entries.add(message);
+                                feed.getMessages().add(message);
 
                             case TITLE:
                                 title = text;
