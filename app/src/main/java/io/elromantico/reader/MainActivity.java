@@ -21,9 +21,12 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import io.elromantico.reader.feed.Feed;
 import io.elromantico.reader.feed.FeedItem;
 import io.elromantico.reader.feed.FeedItemsAdapter;
+import io.elromantico.reader.feed.RSSFeedParser;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
     private static final int CALLBACK_CODE = 1337;
