@@ -1,37 +1,34 @@
-package io.elromantico.reader.rssfeedparser;
+package io.elromantico.reader.feed;
+
+import android.os.AsyncTask;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
-import io.elromantico.reader.feed.Feed;
-import io.elromantico.reader.feed.FeedItem;
+import cz.msebera.android.httpclient.client.ClientProtocolException;
 
-public class RSSFeedParser {
+public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
-    private static final String LANGUAGE = "language";
-    private static final String COPYRIGHT = "copyright";
-    private static final String LINK = "link";
     private static final String AUTHOR = "author";
     private static final String ITEM = "item";
     private static final String PUB_DATE = "pubDate";
-    private static final String GUID = "guid";
+
+    private String feedUrl = "";
 
     private XmlPullParser parser;
 
     public RSSFeedParser(String feedUrl) {
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            this.parser = factory.newPullParser();
-            URL url = new URL(feedUrl);
-            setInputStream(url);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            parser = factory.newPullParser();
+            this.feedUrl = feedUrl;
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
@@ -55,7 +52,7 @@ public class RSSFeedParser {
 
                 switch (event) {
                     case XmlPullParser.START_TAG:
-                        if(name.equals(ITEM) && isFeedHeader) {
+                        if (name.equals(ITEM) && isFeedHeader) {
                             isFeedHeader = false;
                             feed = new Feed(title, description, pubdate);
                         }
@@ -97,13 +94,29 @@ public class RSSFeedParser {
         return feed;
     }
 
-    private void setInputStream(URL url) {
+    @Override
+    protected Feed doInBackground(String... strings) {
+        InputStream stream = null;
         try {
-            parser.setInput(url.openStream(), null);
+            URL url = new URL(this.feedUrl);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestProperty("User-Agent", "");
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.connect();
+            stream = connection.getInputStream();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+
+        try {
+            parser.setInput(stream, null);
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
+
+        return readFeed();
     }
 }

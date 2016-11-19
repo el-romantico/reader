@@ -12,9 +12,12 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import io.elromantico.reader.feed.Feed;
 import io.elromantico.reader.feed.FeedItem;
 import io.elromantico.reader.feed.FeedItemsAdapter;
+import io.elromantico.reader.feed.RSSFeedParser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,5 +46,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+
+        RSSFeedParser parser = new RSSFeedParser("http://waitbutwhy.com/feed");
+        try {
+            Feed feed = parser.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 }
