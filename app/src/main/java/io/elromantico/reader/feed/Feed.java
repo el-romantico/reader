@@ -1,4 +1,4 @@
-package io.elromantico.reader.rssfeedparser;
+package io.elromantico.reader.feed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class Feed {
         final String copyright;
         final String pubDate;
 
-        final List<FeedMessage> entries = new ArrayList<FeedMessage>();
+        final List<FeedItem> entries = new ArrayList<FeedItem>();
 
         public Feed(String title, String link, String description, String language, String copyright, String pubDate) {
                 this.title = title;
@@ -23,7 +23,7 @@ public class Feed {
                 this.pubDate = pubDate;
         }
 
-        public List<FeedMessage> getMessages() {
+        public List<FeedItem> getMessages() {
                 return entries;
         }
 
