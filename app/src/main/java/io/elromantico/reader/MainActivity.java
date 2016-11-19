@@ -1,16 +1,23 @@
 package io.elromantico.reader;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +25,11 @@ import java.util.List;
 import io.elromantico.reader.feed.FeedItem;
 import io.elromantico.reader.feed.FeedItemsAdapter;
 
-public class MainActivity extends AppCompatActivity {
-    private SpeechSynthesizer speech;
+public class MainActivity extends AppCompatActivity implements OnClickListener {
+    private static final int CALLBACK_CODE = 1337;
 
+    private SpeechSynthesizer speech;
+    private SpeechRecognizer sr;
     private List<FeedItem> feedItems = new ArrayList<>();
 
     @Override
@@ -53,5 +62,27 @@ public class MainActivity extends AppCompatActivity {
 
         speech = new SpeechSynthesizer(this);
         speech.pronounce("This is a really cool app, guys!");
+
+        setContentView(R.layout.main);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.RECORD_AUDIO},
+                CALLBACK_CODE);
+
+        Button speakButton = (Button) findViewById(R.id.btn_speak);
+        speakButton.setOnClickListener(this);
+        sr = SpeechRecognizer.createSpeechRecognizer(this);
+        sr.setRecognitionListener(new VoiceListener(this));
+    }
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_speak) {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "voice.recognition.test");
+
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+            sr.startListening(intent);
+        }
     }
 }
