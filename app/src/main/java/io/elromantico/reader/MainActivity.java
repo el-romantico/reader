@@ -1,5 +1,7 @@
 package io.elromantico.reader;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +19,7 @@ import io.elromantico.reader.feed.FeedItem;
 import io.elromantico.reader.feed.FeedItemsAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private SpeechSynthesizer speech;
 
     private List<FeedItem> feedItems = new ArrayList<>();
 
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -43,5 +47,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+
+        speech = new SpeechSynthesizer(this);
+        speech.pronounce("This is a really cool app, guys!");
     }
 }
