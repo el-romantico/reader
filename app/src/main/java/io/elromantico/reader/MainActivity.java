@@ -21,12 +21,9 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import io.elromantico.reader.feed.Feed;
 import io.elromantico.reader.feed.FeedItem;
 import io.elromantico.reader.feed.FeedItemsAdapter;
-import io.elromantico.reader.feed.RSSFeedParser;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
     private static final int CALLBACK_CODE = 1337;
@@ -63,8 +60,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
-        speech = new SpeechSynthesizer(this);
-        speech.pronounce("This is a really cool app, guys!");
+        speech = new SpeechSynthesizer(this, new SpeechSynthesizer.OnInitListener() {
+
+            @Override
+            public void onInit() {
+                speech.pronounce("This is a really cool app, guys!");
+            }
+        });
 
         setContentView(R.layout.main);
 
@@ -76,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         speakButton.setOnClickListener(this);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new VoiceListener(this));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        speech.destroy();
     }
 
     public void onClick(View v) {
