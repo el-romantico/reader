@@ -2,6 +2,9 @@ package io.elromantico.reader.feed;
 
 import android.os.AsyncTask;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,9 @@ public class FeedService extends AsyncTask<String, Void, Void> {
         Feed newFeedChannel = new Feed(feed.title,feed.link, feed.description);
         newFeedChannel.save();
         for (ParsedFeedItem feedItem: feed.getMessages()) {
-            String summary = summarizer.summarize(feedItem.getDescription());
+            Document doc = Jsoup.parse(feedItem.getDescription());
+            String text = doc.body().text();
+            String summary = summarizer.summarize(text);
             FeedItem newItem = new FeedItem(feedItem.title, feedItem.description, summary, feedItem.link, feedItem.author, feedItem.guid);
             newItem.feed = newFeedChannel;
             newItem.save();
