@@ -22,6 +22,8 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.elromantico.reader.feed.FeedService;
+import io.elromantico.reader.feed.ParsedFeedItem;
 import io.elromantico.reader.feed.ParsedFeedItemsAdapter;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -59,10 +61,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
-        List<FeedNarrator.Item> items = new ArrayList<>();
-        items.add(new FeedNarrator.Item("Always Invest In Your Education", "How much did you invest in yourself recently?", ""));
-        items.add(new FeedNarrator.Item("Vue 2.0 is Here!", "Today I am thrilled to announce the official release of Vue.js 2.0: Ghost in the Shell. After 8 alphas, 8 betas and 8 rcs (a total coincidence!), Vue.js 2.0 is ready for production! The official guide has been fully updated and is available at vuejs.org/guide.", ""));
-        items.add(new FeedNarrator.Item("We Gotta Fuckin Stop This", "Talk to any constitutional lawyer and they will explain to you how the Electoral College was put in place as a safeguard against the dangers of a purely representative democracy. The founding fathers cautioned against endowing absolute power of election to a population which can be…", ""));
+        FeedService feedService = new FeedService();
+        feedService.MockData();
+        List<FeedNarrator.Item> items = feedService.getUnreadArticles();
+
         synth = new SpeechSynthesizer(this, new FeedNarrator(items));
 
         setContentView(R.layout.main);

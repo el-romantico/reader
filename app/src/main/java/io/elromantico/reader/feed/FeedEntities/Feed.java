@@ -3,9 +3,9 @@ package io.elromantico.reader.feed.FeedEntities;
 import com.orm.SugarRecord;
 
 public class Feed extends SugarRecord {
-    String title;
-    String description;
-    String link;
+    public String title;
+    public String description;
+    public String link;
 
     public Feed() {
     }

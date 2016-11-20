@@ -1,19 +1,21 @@
 package io.elromantico.reader.feed.FeedEntities;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by angel on 11/20/2016.
  */
 
-public class FeedItem {
-    String title;
-    String content;
-    String summary;
-    String link;
-    String author;
-    String guid;
-    boolean isRead;
+public class FeedItem extends SugarRecord{
+    public String title;
+    public String content;
+    public String summary;
+    public String link;
+    public String author;
+    public String guid;
+    public boolean isRead;
 
-    Feed feed;
+    public Feed feed;
 
     public FeedItem() {
     }
