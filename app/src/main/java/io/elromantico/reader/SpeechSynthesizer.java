@@ -2,20 +2,19 @@ package io.elromantico.reader;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.Voice;
 
 import java.util.Locale;
-import java.util.Set;
 
 public class SpeechSynthesizer {
     public interface OnInitListener {
 
-        void onInit();
+        void onInit(SpeechSynthesizer synth);
     }
 
     private TextToSpeech tts;
 
     public SpeechSynthesizer(Context context, final OnInitListener listener) {
+        final SpeechSynthesizer synth = this;
         tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
 
             @Override
@@ -23,7 +22,7 @@ public class SpeechSynthesizer {
                 if(status != TextToSpeech.ERROR) {
                     tts.setLanguage(Locale.US);
                 }
-                listener.onInit();
+                listener.onInit(synth);
             }
         });
     }
@@ -31,9 +30,12 @@ public class SpeechSynthesizer {
     public void destroy() {
         tts.stop();
         tts.shutdown();
+        tts = null;
     }
 
     public void pronounce(final String text) {
-        tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+        if (tts != null) {
+            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+        }
     }
 }
