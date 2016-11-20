@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private SpeechSynthesizer synth;
     private SpeechRecognizer sr;
-    private List<ParsedFeedItem> parsedFeedItems = new ArrayList<>();
+    private FeedService feedService = new FeedService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                         .setView(feedUrl)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                String url = feedUrl.getText().toString();
+//                                String url = feedUrl.getText().toString();
+                                String url = "http://waitbutwhy.com/feed";
+                                feedService.execute(url);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -75,27 +77,20 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.feed_items_recycler_view);
 
-        ParsedFeedItemsAdapter mAdapter = new ParsedFeedItemsAdapter(parsedFeedItems);
+        ParsedFeedItemsAdapter mAdapter = new ParsedFeedItemsAdapter(feedService.getFeedChannels());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-
-        FeedService feedService = new FeedService();
-        feedService.MockData();
         List<FeedNarrator.Item> items = feedService.getUnreadArticles();
 
         synth = new SpeechSynthesizer(this, new FeedNarrator(items));
-
-        setContentView(R.layout.main);
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
                 CALLBACK_CODE);
 
-        Button speakButton = (Button) findViewById(R.id.btn_speak);
-        speakButton.setOnClickListener(this);
         sr = SpeechRecognizer.createSpeechRecognizer(this);
         sr.setRecognitionListener(new VoiceListener(this));
     }
