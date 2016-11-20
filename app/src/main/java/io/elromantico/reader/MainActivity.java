@@ -1,15 +1,9 @@
 package io.elromantico.reader;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -31,11 +23,10 @@ import io.elromantico.reader.feed.FeedService;
 import io.elromantico.reader.feed.ParsedFeedItem;
 import io.elromantico.reader.feed.ParsedFeedItemsAdapter;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends AppCompatActivity {
     private static final int CALLBACK_CODE = 1337;
 
-    private SpeechSynthesizer synth;
-    private SpeechRecognizer sr;
+    private SpeechSynthesizer synthesizer;
     private List<ParsedFeedItem> parsedFeedItems = new ArrayList<>();
 
     @Override
@@ -81,40 +72,29 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-
         FeedService feedService = new FeedService();
         feedService.MockData();
         List<FeedNarrator.Item> items = feedService.getUnreadArticles();
-
-        synth = new SpeechSynthesizer(this, new FeedNarrator(items));
+        synthesizer = new SpeechSynthesizer(this, new FeedNarrator(this, items));
 
         setContentView(R.layout.main);
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
                 CALLBACK_CODE);
+    }
 
-        Button speakButton = (Button) findViewById(R.id.btn_speak);
-        speakButton.setOnClickListener(this);
-        sr = SpeechRecognizer.createSpeechRecognizer(this);
-        sr.setRecognitionListener(new VoiceListener(this));
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        synthesizer.stop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        synth.destroy();
-    }
-
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_speak) {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "voice.recognition.test");
-
-            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-            sr.startListening(intent);
-        }
+        synthesizer.destroy();
     }
 }
