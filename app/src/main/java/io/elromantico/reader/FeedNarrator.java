@@ -111,7 +111,7 @@ public class FeedNarrator implements SpeechSynthesizer.OnInitListener {
         }
 
         Item item = items.get(idx);
-        synthesizer.pronounce(item.title + "." + item.summary);
+        synthesizer.pronounce(item.title + "\n" + item.summary);
     }
 
     private void readDetails(SpeechSynthesizer synthesizer) {
