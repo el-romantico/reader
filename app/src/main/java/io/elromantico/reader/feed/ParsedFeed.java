@@ -3,21 +3,21 @@ package io.elromantico.reader.feed;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Feed {
+public class ParsedFeed {
 
         final String title;
         final String description;
-        final String pubDate;
+        final String link;
 
-        final List<FeedItem> entries = new ArrayList<FeedItem>();
+        final List<ParsedFeedItem> entries = new ArrayList<ParsedFeedItem>();
 
-        public Feed(String title, String description, String pubDate) {
+        public ParsedFeed(String title, String description, String pubDate, String link) {
                 this.title = title;
                 this.description = description;
-                this.pubDate = pubDate;
+                this.link = link;
         }
 
-        public List<FeedItem> getMessages() {
+        public List<ParsedFeedItem> getMessages() {
                 return entries;
         }
 
@@ -29,12 +29,12 @@ public class Feed {
                 return description;
         }
 
-        public String getPubDate() {
-                return pubDate;
+        public String getLink() {
+                return link;
         }
 
         @Override
         public String toString() {
-                return "Feed [description=" + description + ", pubDate=" + pubDate + ", title=" + title + "]";
+                return "ParsedFeed [description=" + description + ", title=" + title + "]";
         }
 }

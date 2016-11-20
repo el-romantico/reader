@@ -1,16 +1,16 @@
 package io.elromantico.reader.feed;
 
-public class FeedItem {
+public class ParsedFeedItem {
     String title;
     String description;
     String link;
     String author;
     String guid;
 
-    public FeedItem() {
+    public ParsedFeedItem() {
     }
 
-    public FeedItem(String title) {
+    public ParsedFeedItem(String title) {
         this.title = title;
     }
 
@@ -56,7 +56,7 @@ public class FeedItem {
 
     @Override
     public String toString() {
-        return "FeedItem [title=" + title + ", description=" + description
+        return "ParsedFeedItem [title=" + title + ", description=" + description
                 + ", link=" + link + ", author=" + author + ", guid=" + guid
                 + "]";
     }
