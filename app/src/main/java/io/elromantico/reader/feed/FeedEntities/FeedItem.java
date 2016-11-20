@@ -8,11 +8,12 @@ import com.orm.SugarRecord;
 
 public class FeedItem extends SugarRecord{
     public String title;
-    public String content;
+    public String description;
     public String summary;
     public String link;
     public String author;
     public String guid;
+    public String content;
     public String isRead;
 
     public Feed feed;
@@ -20,13 +21,14 @@ public class FeedItem extends SugarRecord{
     public FeedItem() {
     }
 
-    public FeedItem(String title, String description, String summary, String link, String author, String guid) {
+    public FeedItem(String title, String description, String summary, String link, String author, String guid, String content) {
         this.title = title;
-        this.content = description;
+        this.description = description;
         this.summary = summary;
         this.link = link;
         this.author = author;
         this.guid = guid;
+        this.content = content;
         this.isRead = "0";
     }
 }

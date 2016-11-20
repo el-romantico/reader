@@ -6,6 +6,7 @@ public class ParsedFeedItem {
     String link;
     String author;
     String guid;
+    String content;
 
     public ParsedFeedItem() {
     }
@@ -52,6 +53,14 @@ public class ParsedFeedItem {
 
     public void setGuid(String guid) {
         this.guid = guid;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override

@@ -20,6 +20,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, ParsedFeed> {
     private static final String ITEM = "item";
     private static final String PUB_DATE = "pubDate";
     private static final String LINK = "link";
+    private static final String CONTENT = "content:encoded";
 
     private String feedUrl = "";
 
@@ -48,6 +49,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, ParsedFeed> {
             String pubdate = "";
             String text = "";
             String link = "";
+            String content = "";
 
             while (event != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
@@ -71,6 +73,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, ParsedFeed> {
                                 message.setAuthor(author);
                                 message.setDescription(description);
                                 message.setTitle(title);
+                                message.setContent(content);
                                 feed.getMessages().add(message);
 
                             case TITLE:
@@ -87,6 +90,9 @@ public class RSSFeedParser extends AsyncTask<String, Void, ParsedFeed> {
                                 break;
                             case LINK:
                                 link = text;
+                                break;
+                            case CONTENT:
+                                content = text;
                                 break;
                         }
                         break;

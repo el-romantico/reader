@@ -30,10 +30,10 @@ public class FeedService extends AsyncTask<String, Void, Void> {
         Feed newFeedChannel = new Feed(feed.title,feed.link, feed.description);
         newFeedChannel.save();
         for (ParsedFeedItem feedItem: feed.getMessages()) {
-            Document doc = Jsoup.parse(feedItem.getDescription());
+            Document doc = Jsoup.parse(feedItem.getContent());
             String text = doc.body().text();
             String summary = summarizer.summarize(text);
-            FeedItem newItem = new FeedItem(feedItem.title, text, summary, feedItem.link, feedItem.author, feedItem.guid);
+            FeedItem newItem = new FeedItem(feedItem.title, feedItem.description, summary, feedItem.link, feedItem.author, feedItem.guid, text);
             newItem.feed = newFeedChannel;
             newItem.save();
         }

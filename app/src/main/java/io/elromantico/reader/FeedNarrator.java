@@ -106,7 +106,7 @@ public class FeedNarrator implements SpeechSynthesizer.OnInitListener {
     }
 
     private void readItem(SpeechSynthesizer synthesizer) {
-        if (items.size() < idx) {
+        if (items.size() <= idx) {
             return;
         }
 
@@ -115,7 +115,7 @@ public class FeedNarrator implements SpeechSynthesizer.OnInitListener {
     }
 
     private void readDetails(SpeechSynthesizer synthesizer) {
-        if (items.size() < idx) {
+        if (items.size() <= idx) {
             return;
         }
 
