@@ -1,6 +1,7 @@
 package io.elromantico.reader;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final Activity self = this;
+        FloatingActionButton narrate = (FloatingActionButton) findViewById(R.id.narrate);
+        narrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<FeedNarrator.Item> items = feedService.getUnreadArticles();
+                synthesizer = new SpeechSynthesizer(self, new FeedNarrator(self, items));
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-
-        List<FeedNarrator.Item> items = feedService.getUnreadArticles();
-        synthesizer = new SpeechSynthesizer(this, new FeedNarrator(this, items));
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
