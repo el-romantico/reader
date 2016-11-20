@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int CALLBACK_CODE = 1337;
 
     private SpeechSynthesizer synthesizer;
-    private List<ParsedFeedItem> parsedFeedItems = new ArrayList<>();
+    private FeedService feedService = new FeedService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
                         .setView(feedUrl)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                String url = feedUrl.getText().toString();
+//                                String url = feedUrl.getText().toString();
+                                String url = "http://waitbutwhy.com/feed";
+                                feedService.execute(url);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -66,18 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.feed_items_recycler_view);
 
-        ParsedFeedItemsAdapter mAdapter = new ParsedFeedItemsAdapter(parsedFeedItems);
+        ParsedFeedItemsAdapter mAdapter = new ParsedFeedItemsAdapter(feedService.getFeedChannels());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        FeedService feedService = new FeedService();
-        feedService.MockData();
         List<FeedNarrator.Item> items = feedService.getUnreadArticles();
         synthesizer = new SpeechSynthesizer(this, new FeedNarrator(this, items));
-
-        setContentView(R.layout.main);
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECORD_AUDIO},
