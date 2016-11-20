@@ -120,7 +120,11 @@ public class FeedNarrator implements SpeechSynthesizer.OnInitListener {
         }
 
         Item item = items.get(idx);
-        synthesizer.pronounce(item.content);
+
+        String[] batches = item.content.split("[\\.?!,]");
+        for (String batch : batches) {
+            synthesizer.pronounce(item.content);
+        }
     }
 
     private void command() {
