@@ -13,7 +13,7 @@ public class FeedItem extends SugarRecord{
     public String link;
     public String author;
     public String guid;
-    public boolean isRead;
+    public String isRead;
 
     public Feed feed;
 
@@ -27,6 +27,6 @@ public class FeedItem extends SugarRecord{
         this.link = link;
         this.author = author;
         this.guid = guid;
-        this.isRead = false;
+        this.isRead = "0";
     }
 }
