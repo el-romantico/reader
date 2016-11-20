@@ -21,19 +21,16 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import io.elromantico.reader.feed.Feed;
-import io.elromantico.reader.feed.FeedItem;
-import io.elromantico.reader.feed.FeedItemsAdapter;
-import io.elromantico.reader.feed.RSSFeedParser;
+import io.elromantico.reader.feed.ParsedFeedItem;
+import io.elromantico.reader.feed.ParsedFeedItemsAdapter;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
     private static final int CALLBACK_CODE = 1337;
 
     private SpeechSynthesizer speech;
     private SpeechRecognizer sr;
-    private List<FeedItem> feedItems = new ArrayList<>();
+    private List<ParsedFeedItem> parsedFeedItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.feed_items_recycler_view);
 
-        FeedItemsAdapter mAdapter = new FeedItemsAdapter(feedItems);
+        ParsedFeedItemsAdapter mAdapter = new ParsedFeedItemsAdapter(parsedFeedItems);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

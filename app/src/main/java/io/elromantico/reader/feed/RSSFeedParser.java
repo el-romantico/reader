@@ -13,12 +13,13 @@ import java.net.URL;
 
 import cz.msebera.android.httpclient.client.ClientProtocolException;
 
-public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
+public class RSSFeedParser extends AsyncTask<String, Void, ParsedFeed> {
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String AUTHOR = "author";
     private static final String ITEM = "item";
     private static final String PUB_DATE = "pubDate";
+    private static final String LINK = "link";
 
     private String feedUrl = "";
 
@@ -34,8 +35,8 @@ public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
         }
     }
 
-    public Feed readFeed() {
-        Feed feed = null;
+    public ParsedFeed readFeed() {
+        ParsedFeed feed = null;
         try {
             int event = parser.getEventType();
 
@@ -46,6 +47,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
             String author = "";
             String pubdate = "";
             String text = "";
+            String link = "";
 
             while (event != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
@@ -54,7 +56,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
                     case XmlPullParser.START_TAG:
                         if (name.equals(ITEM) && isFeedHeader) {
                             isFeedHeader = false;
-                            feed = new Feed(title, description, pubdate);
+                            feed = new ParsedFeed(title, description, pubdate, link);
                         }
                         break;
 
@@ -65,7 +67,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
                     case XmlPullParser.END_TAG:
                         switch (name) {
                             case ITEM:
-                                FeedItem message = new FeedItem();
+                                ParsedFeedItem message = new ParsedFeedItem();
                                 message.setAuthor(author);
                                 message.setDescription(description);
                                 message.setTitle(title);
@@ -83,6 +85,9 @@ public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
                             case PUB_DATE:
                                 pubdate = text;
                                 break;
+                            case LINK:
+                                link = text;
+                                break;
                         }
                         break;
                 }
@@ -95,7 +100,7 @@ public class RSSFeedParser extends AsyncTask<String, Void, Feed> {
     }
 
     @Override
-    protected Feed doInBackground(String... strings) {
+    protected ParsedFeed doInBackground(String... strings) {
         InputStream stream = null;
         try {
             URL url = new URL(this.feedUrl);

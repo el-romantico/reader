@@ -10,9 +10,9 @@ import java.util.List;
 
 import io.elromantico.reader.R;
 
-public class FeedItemsAdapter extends RecyclerView.Adapter<FeedItemsAdapter.MyViewHolder> {
+public class ParsedFeedItemsAdapter extends RecyclerView.Adapter<ParsedFeedItemsAdapter.MyViewHolder> {
 
-    private List<FeedItem> feedItems;
+    private List<ParsedFeedItem> parsedFeedItems;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, year, genre;
@@ -25,8 +25,8 @@ public class FeedItemsAdapter extends RecyclerView.Adapter<FeedItemsAdapter.MyVi
         }
     }
 
-    public FeedItemsAdapter(List<FeedItem> feedItems) {
-        this.feedItems = feedItems;
+    public ParsedFeedItemsAdapter(List<ParsedFeedItem> parsedFeedItems) {
+        this.parsedFeedItems = parsedFeedItems;
     }
 
     @Override
@@ -38,14 +38,14 @@ public class FeedItemsAdapter extends RecyclerView.Adapter<FeedItemsAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        FeedItem feedItem = feedItems.get(position);
-        holder.title.setText(feedItem.getTitle());
+        ParsedFeedItem parsedFeedItem = parsedFeedItems.get(position);
+        holder.title.setText(parsedFeedItem.getTitle());
         holder.genre.setText("asd");
         holder.year.setText("32");
     }
 
     @Override
     public int getItemCount() {
-        return feedItems.size();
+        return parsedFeedItems.size();
     }
 }
