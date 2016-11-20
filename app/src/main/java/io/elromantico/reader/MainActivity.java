@@ -2,6 +2,7 @@ package io.elromantico.reader;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -10,14 +11,18 @@ import android.speech.SpeechRecognizer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +49,26 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                final EditText feedUrl = new EditText(MainActivity.this);
+
+                View viewInflated = LayoutInflater.from(MainActivity.this)
+                        .inflate(R.layout.insertion_dialog, (ViewGroup) MainActivity.this.findViewById(android.R.id.content), false);
+                // Set up the input
+                final EditText input = (EditText) viewInflated.findViewById(R.id.insertion_input_field);
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Add new feed source")
+                        .setView(feedUrl)
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                String url = feedUrl.getText().toString();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -57,8 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 
         List<FeedNarrator.Item> items = new ArrayList<>();
         items.add(new FeedNarrator.Item("Always Invest In Your Education", "How much did you invest in yourself recently?", ""));
