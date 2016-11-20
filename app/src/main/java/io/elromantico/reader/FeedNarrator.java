@@ -111,7 +111,8 @@ public class FeedNarrator implements SpeechSynthesizer.OnInitListener {
         }
 
         Item item = items.get(idx);
-        synthesizer.pronounce(item.title + "\n" + item.summary);
+        synthesizer.pronounce(item.title, false);
+        synthesizer.pronounce(item.summary, true);
     }
 
     private void readDetails(SpeechSynthesizer synthesizer) {
@@ -122,8 +123,9 @@ public class FeedNarrator implements SpeechSynthesizer.OnInitListener {
         Item item = items.get(idx);
 
         String[] batches = item.content.split("[\\.?!,]");
-        for (String batch : batches) {
-            synthesizer.pronounce(item.content);
+        for (int i = 0; i < batches.length; i++) {
+            boolean last = (i == (batches.length - 1));
+            synthesizer.pronounce(batches[i], last);
         }
     }
 
